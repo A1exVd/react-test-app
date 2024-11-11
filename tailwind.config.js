@@ -5,6 +5,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      roboto: ["Roboto", "serif"]
+    }
   },
   plugins: [],
 }
