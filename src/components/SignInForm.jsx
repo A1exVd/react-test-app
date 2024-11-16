@@ -1,93 +1,76 @@
-import { useState, useRef, useEffect } from 'react'
-import { validation } from '../utils/validation'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Button from '@mui/material/Button'
+import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod' 
+import { signInSchema } from '../lib/zodSchemes'
+import FormInputText from './FormInputText'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
-export default function SignInForm() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+export default function SingInForm() {
+  const [showPassword, setShowPassword] = useState(false)
+  const [open, setOpen] = useState(false)
+  const {
+    handleSubmit,
+    control,
+    reset
+  } = useForm({
+    resolver: zodResolver(signInSchema)
   })
   
-  const [error, setError] = useState({
-    email: '',
-    password: ''
-  })
-
-  const [showPassword, setShowPassword] = useState(false)
-
-  const [isSuccess, setIsSuccess] = useState(false)
-
-  const inputRef = useRef('')
-
-  useEffect(() => {
-    inputRef.current.focus()
-  }, [])
-
-  const handleShowPassword = (e) => {
-    setShowPassword(e.target.checked)
-  } 
-
-  const handleFormData = (e) => {
-    setError(prev => ({...prev, [e.target.name]: validation(e.target)}))
-    setFormData(prev => {
-      return {
-        ...prev, 
-        [e.target.name]: e.target.value
-      }
-    })
+  const onSubmit = (data) => {
+    setOpen(true)
+    reset()
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if(!Object.values(error).every(item => item === '')) return 
-    setIsSuccess(true)
-  } 
+  return(
+    <Paper elevation={6} sx={{ maxHeight: '25rem', maxWidth: '15rem', padding: '1.5rem', marginLeft: '30rem', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <Typography
+        variant='h5'
+        sx={{marginBottom: '2rem', color: "rgb(59 130 246)"}}
+        >
+        Sing In
+      </Typography>
 
-  return (
-    <>
-    {isSuccess ? (
-      <div className='flex fixed top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 border justify-center items-center'>You successfully signed in!!!</div>
-    ) : (
-    <form onSubmit={handleSubmit}>
-      <div className="flex flex-col fixed z-10 justify-center items-center top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 max-w-96 max-h-[26rem] p-8 rounded-xl border shadow-lg ">
-        <h1 className="mb-8 text-2xl text-blue-500">Login</h1>      
-        <input 
-          className="auth-input"
-          ref={inputRef} 
-          placeholder="Email" 
-          name='email' 
-          value={formData.email} 
-          onChange={handleFormData}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormInputText 
+          type='text'
+          name="email"
+          control={control}
+          label={'email'}
+          placeholder={'Email'}
+          autoFocus
         />
-        <p className={error.email ? `auth-error` : 'hidden'}>{error.email}</p>
-        <input 
-          type={showPassword ? 'text' : 'password'} 
-          className="auth-input" 
-          placeholder="Password" 
-          name='password' 
-          value={formData.password} 
-          onChange={handleFormData}
+
+        <FormInputText
+          type={showPassword ? 'text' : 'password'}
+          name="password"
+          control={control}
+          label={'password'}
+          placeholder={'Password'}
         />
-        <p className={error.password ? `auth-error` : 'hidden'}>{error.password}</p>
-        <div className="flex mr-28 ">
-          <input 
-            className='mr-2'
-            type="checkbox" 
-            id="show-password" 
-            onChange={handleShowPassword}
-          />
-          <label htmlFor='show-password'>Show Password</label>
-        </div>
-        <button className="hover:bg-gray-300 hover:text-blue-500 p-2 my-2 rounded-lg bg-gray-200">Sign in</button>
-        <div className="text-sm">
-          <p>Forgot <span className="text-blue-500 cursor-pointer">Username / Password</span></p>
-          <p className="">Don't have an account? <span className="text-blue-500 cursor-pointer">Sign up</span></p>
-        </div>
-      </div>
-    </form>
-    )}
-    </>
+
+        <FormControlLabel
+          sx={{"& .MuiTypography-root": {fontSize: '0.9rem'}}}
+          label="Show password"
+          control={<Checkbox size='small' checked={showPassword} onChange={()=>{setShowPassword(!showPassword)}} />}
+        />
+        <Button type='submit' sx={{width: '100%'}}>Sign in</Button>
+      </form>
+        <Snackbar open={open} autoHideDuration={3000} onClose={() => {setOpen(false)}}>
+          <Alert
+            onClose={() => {setOpen(false)}}
+            severity="success"
+            variant="outlined"
+            sx={{ width: '100%' }}
+          >
+            You successfully signed in!
+          </Alert>
+      </Snackbar>
+    </Paper>
   )
 }
-
-
-

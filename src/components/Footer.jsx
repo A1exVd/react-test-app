@@ -1,47 +1,57 @@
-import instIcon from '../assets/ins-logo.svg'
-import tiktokIcon from '../assets/tiktok-icon.svg'
+import Grid from '@mui/material/Grid2'
+import Item from '@mui/material/Grid2'
+import List from '@mui/material/List'
+import ListItem from "@mui/material/ListItem"
+import ListItemText from "@mui/material/ListItemText"
+import Typography from '@mui/material/Typography'
+import InstagramIcon from '@mui/icons-material/Instagram';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import TelegramIcon from '@mui/icons-material/Telegram';
 
 export default function Footer() {
+  const menuItem = [
+    {
+      title: 'INFORMATION',
+      titleItems: ['Pricing', 'About us', 'Events', 'Blog']
+    },
+    {
+      title: 'LEGAL',
+      titleItems: ['Temrms of use', 'License agreement', 'Privacy policy', 'Copyright Information']
+    },
+    {
+      title: 'SUPPORT',
+      titleItems: ['FAQ', 'Search guide', 'Contact']
+    }
+  ]
+
   return (
-    <>
-      <footer>
-        <div className="grid grid-cols-5 grid-rows-6 absolute bottom-0 left-0 w-full max-h-[15rem] gap-2 border-t text-sm hover:[&>div>ul>li]:cursor-pointer hover:[&>div>ul>li]:text-blue-500 [&>div>ul>li]:py-1">
-          <div className="p-6 row-span-4 ">
-            <h1 className="mb-1 font-bold text-blue-500">INFORMATION</h1>
-            <ul >
-              <li>Pricing</li>
-              <li>About us</li>
-              <li>Events</li>
-              <li>Blog</li>
-            </ul>
-          </div>
-          <div className="p-6 row-span-4">
-            <h1 className="mb-1 font-bold text-blue-500">LEGAL</h1>
-            <ul>
-              <li>Terms of use</li>
-              <li>License agreement</li>
-              <li>Privacy policy</li>
-              <li>Copyright information</li>
-            </ul>
-          </div>
-          <div className="p-6 row-span-4">
-            <h1 className="mb-1 font-bold text-blue-500">SUPPORT</h1>
-            <ul>
-              <li>FAQ</li>
-              <li>Search quide</li>
-              <li>Contact</li>
-            </ul>
-          </div>
-          <div className="p-6 col-span-2 row-span-4 text-end">
-              Here is some text...
-          </div>
-          <div className="col-span-5 self-center text-sm w-full flex justify-center">
-            <img className='w-10 h-10' src={instIcon}/>
-            <img className='w-10 h-10' src={tiktokIcon}/>
-          </div>
-          <div className="col-span-5 self-center text-sm w-full flex justify-center">@ 2024 Copyright. All rights reserved.</div>
-        </div>
-      </footer>
-    </>
+    <footer>
+      <Grid container spacing={0} sx={{width: '100%', height: '15rem', padding: '0.5rem'}}>
+          {menuItem.map(item => (
+            <Grid size={3} key={item.title} sx={{}}>
+              <Typography  sx={{marginLeft: '1rem', color: "rgb(59 130 246)"}}>
+                {item.title}
+              </Typography>
+              <List sx={{"& .MuiTypography-root": {fontSize: '0.7rem'}}}> 
+                {item.titleItems.map((titleItem) => (
+                <ListItem key={titleItem} sx={{'&:hover': { color: 'rgb(59 130 246)', cursor: 'pointer'}}}>
+                  <ListItemText primary={titleItem} />
+                </ListItem>
+                ))}
+              </List>
+            </Grid>
+          ))}
+        <Grid size={3}>
+          <Grid>
+            <InstagramIcon sx={{'&:hover': { color: 'purple', cursor: 'pointer'}}}/>    
+            <YouTubeIcon sx={{'&:hover': {color:'red', cursor: 'pointer'}}}/>
+            <TelegramIcon sx={{'&:hover': {color:'rgb(59 130 246)', cursor: 'pointer'}}}/>    
+          </Grid>
+        </Grid>
+        <Grid size={12} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Typography sx={{fontSize: '0.6rem'}}>@ 2024 Copyright. All rights reserved.</Typography>
+        </Grid>
+      </Grid>
+    </footer>
   )
 }

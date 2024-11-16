@@ -1,19 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
-:root {
-  --text-color: #6b7280;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@layer components {
-  .auth-input {
-    @apply mb-6 w-64 p-2 rounded-lg border shadow-sm focus:outline-blue-500
-  }
-
-  .auth-error {
-    @apply -mt-5 w-64 text-sm text-red-500
-  }
-}

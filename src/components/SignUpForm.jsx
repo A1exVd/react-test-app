@@ -1,107 +1,99 @@
-import { useState, useEffect, useRef } from 'react'
-import { validation } from '../utils/validation'
+import { useState } from 'react'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Button from '@mui/material/Button'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod' 
+import { signUpSchema } from '../lib/zodSchemes'
+import FormInputText from './FormInputText'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
-export default function SignUpForm() {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  })
-
-  const [error, setError] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: ''
+export default function SingUpForm() {
+  const [open, setOpen] = useState(false)
+  const {
+    handleSubmit,
+    control,
+    reset
+  } = useForm({
+    resolver: zodResolver(signUpSchema)
   })
   
-  const inputRef = useRef('')
+  const onSubmit = (data) => {
+    setOpen(true)
+    reset()
+  }
   
-  useEffect(() => {
-    inputRef.current.focus()
-  }, [])
+  return(
+    <Paper elevation={6} sx={{ maxHeight: '35rem', maxWidth: '20rem', padding: '1.5rem', marginLeft: '30rem', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <Typography
+        variant='h5'
+        sx={{marginBottom: '2rem', color: "rgb(59 130 246)"}}
+        >
+        Sing Up
+      </Typography>
 
-  const handleFormData = (e) => {
-    setError(prev => ({...prev, [e.target.name]: validation(e.target)}))
-    setFormData(prev => {
-      return {
-      ...prev, 
-      [e.target.name]: e.target.value
-    }
-  })
-  }
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormInputText 
+          type='text'
+          name="firstName"
+          control={control}
+          label={'firstName'}
+          placeholder={'First Name'}
+          autoFocus
+        />
 
-  const handleSubmit = (e) => {
-    e.preventDefault() 
-    if(!Object.values(error).every(item => item === '')) return 
-  }
+        <FormInputText
+          type='text'
+          name="lastName"
+          control={control}
+          label={'lastName'}
+          placeholder={'Last Name'}
+        />
 
-  return (
-    <>
-    <form onSubmit={handleSubmit}>
-      <div className="flex flex-col fixed justify-center items-center top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 max-w-96 max-h-[30rem] p-8 rounded-xl border shadow-lg">
-        <h1 className="mb-8 text-2xl text-blue-500">
-          SignUp
-        </h1>      
-        <input
-          className="auth-input"
-          ref={inputRef} 
-          required 
-          placeholder="First Name" 
-          name='firstName' 
-          value={formData.firstName} 
-          onChange={handleFormData} 
+        <FormInputText 
+          type='text'
+          name="email"
+          control={control}
+          label={'email'}
+          placeholder={'Email'}
         />
-        <p className={error.firstName ? `auth-error` : 'hidden'}>{error.firstName}</p>
-        <input 
-          className="auth-input" 
-          required
-          placeholder="Last Name" 
-          name='lastName' 
-          value={formData.lastName} 
-          onChange={handleFormData}
+
+        <FormInputText 
+          type='password'
+          name="password"
+          control={control}
+          label={'password'}
+          placeholder={'Password'}
         />
-        <p className={error.lastName ? `auth-error` : 'hidden'}>{error.lastName}</p>
-        <input 
-          className="auth-input"
-          required 
-          placeholder="Email" 
-          name='email' 
-          value={formData.email} 
-          onChange={handleFormData}
+
+        <FormInputText 
+          type='password'
+          name="confirmPassword"
+          control={control}
+          label={'confirmPassword'}
+          placeholder={'Type password again'}
         />
-        <p className={error.email ? `auth-error` : 'hidden'}>{error.email}</p>
-        <input 
-          className="auth-input"
-          required 
-          type='password' 
-          placeholder="Password" 
-          value={formData.password} 
-          name='password' 
-          onChange={handleFormData}
+
+        <FormControlLabel
+          sx={{"& .MuiTypography-root": {fontSize: '0.9rem'}}}
+          label="I agree to the terms and conditions"
+          control={<Checkbox size='small' required/>}
         />
-        <p className={error.password ? `auth-error` : 'hidden'}>{error.password}</p>
-        <div className="flex mr-18 text-nowrap">
-          <input 
-            className='mr-2 focus:outline-blue-500'
-            type="checkbox" 
-            id="signup-agree" 
-            required 
-          />
-          <label htmlFor='signup-agree'>
-            I agree to the <span className="text-blue-500 cursor-pointer text-nowrap">terms and conditions</span>
-          </label>
-        </div>
-        <button className="hover:bg-gray-300 hover:text-blue-500 p-2 my-2 rounded-lg bg-gray-200">Sign up</button>
-        <div className="text-sm">
-          <p>
-            Already have an account? <span className="text-blue-500 cursor-pointer">Sign in</span>
-          </p>
-        </div>
-      </div>  
-    </form>
-    </>    
+        <Button type='submit' sx={{width: '100%'}}>Sign in</Button>
+      </form>
+        <Snackbar open={open} autoHideDuration={3000} onClose={() => {setOpen(false)}}>
+          <Alert
+            onClose={() => {setOpen(false)}}
+            severity="success"
+            variant="outlined"
+            sx={{ width: '100%' }}
+          >
+            You successfully signed up!
+          </Alert>
+      </Snackbar>
+    </Paper>
   )
 }
-

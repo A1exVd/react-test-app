@@ -1,19 +1,17 @@
 import Header from "./components/Header";
-import SignUpForm from "./components/SignUpForm";
-import SignInForm from "./components/SignInForm";
+import SingInForm from "./components/SignInForm";
+import Layout from "./components/Layout";
+import SingUpForm from "./components/SignUpForm";
 import Footer from "./components/Footer";
-import Drawer from "./components/Drawer";
 
 function App() {
   return (
-    <div className="font-roboto relative min-h-screen text-[var(--text-color)]">
+    <Layout>
       <Header />
-      < SignUpForm />
-      <Drawer />
-      {/* <SignInForm /> */}
-      <div className="h-[100rem]"></div>
+      <SingInForm />
+      <SingUpForm />
       <Footer />
-    </div>
+    </Layout>
   );
 }
 
